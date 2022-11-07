@@ -3,6 +3,15 @@ import React from "react";
 //import { useState, useEffect, useRef } from "react";
 import * as tf from "@tensorflow/tfjs";
 import "./model.json";
+import "bootstrap/dist/css/bootstrap.min.css";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+//import NavDropdown from "react-bootstrap/NavDropdown";
+import Form from "react-bootstrap/Form";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 
 class App extends React.Component {
   constructor(props) {
@@ -55,18 +64,50 @@ class App extends React.Component {
 
   render() {
     return (
-      <div>
-        <label>
-          Name:
-          <input
-            type="text"
-            value={this.state.value}
-            onChange={this.handleChange}
-          />
-        </label>
-        <input type="submit" value="Submit" onClick={this.loadModel} />
-        <p>{this.state.outp}</p>
-      </div>
+      <>
+        <div>
+          <Navbar bg="light" expand="lg" className="mb-3">
+            <Container className="ms-1">
+              <Navbar.Brand href="#home">Fake News Detection</Navbar.Brand>
+              <Navbar.Toggle aria-controls="basic-navbar-nav" />
+              <Navbar.Collapse id="basic-navbar-nav">
+                <Nav className="me-auto">
+                  <Nav.Link href="#home">Home</Nav.Link>
+                  <Nav.Link href="https://www.kaggle.com/code/praveen0123/notebooka1895547d8">
+                    View Code
+                  </Nav.Link>
+                </Nav>
+              </Navbar.Collapse>
+            </Container>
+          </Navbar>
+        </div>
+
+        <Form>
+          <Form.Group className="mb-3 ms-3">
+            <Row>
+              <Col xs={4}>
+                <Form.Label>Enter The Value To Be Predicted</Form.Label>
+                <Form.Control
+                  type="text"
+                  value={this.state.value}
+                  onChange={this.handleChange}
+                  placeholder="Enter The Value To Be Predicted"
+                />
+              </Col>
+            </Row>
+          </Form.Group>
+
+          <Button
+            className="mb-3 ms-3"
+            variant="primary"
+            type="submit"
+            value="Submit"
+            onClick={this.loadModel}
+          >
+            Predict
+          </Button>
+        </Form>
+      </>
     );
   }
 }
