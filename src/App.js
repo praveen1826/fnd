@@ -12,18 +12,26 @@ import Navbar from "react-bootstrap/Navbar";
 import Form from "react-bootstrap/Form";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
+import Alert from "react-bootstrap/Alert";
+import Spinner from "react-bootstrap/Spinner";
 
 class App extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { value: [1][2], outp: "" };
+    this.state = { value: [1][2], outp: [1], clk: 0 };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleSubmit = this.handleSubmit.bind(this);
     this.loadModel = this.loadModel.bind(this);
+    this.Load = this.Load.bind(this);
   }
 
+  Load() {
+    this.setState({
+      clk: 1,
+    });
+  }
   loadModel = async () => {
+    this.Load();
     const model = await tf.loadLayersModel(
       "https://raw.githubusercontent.com/praveen1826/fnd/main/src/model.json"
     );
@@ -62,8 +70,14 @@ class App extends React.Component {
 
     console.log(b);
     const outp1 = model.predict(a);
-
-    this.setState({ outp: outp1.print() });
+    outp1.print();
+    console.log(outp1.dataSync()[0]);
+    if (outp1.dataSync()[0] > 0.5) {
+      this.setState({ outp: "News Is Fake" });
+    }
+    if (outp1.dataSync()[0] < 0.5) {
+      this.setState({ outp: "News Is True" });
+    }
   };
 
   handleChange(event) {
@@ -71,10 +85,21 @@ class App extends React.Component {
       console.log(this.state.value);
     });
   }
+  Loading() {
+    if (this.state.clk === 1) {
+      console.log("reached");
+      if (typeof this.state.outp == "object") {
+        return (
+          <Spinner animation="border" role="status">
+            <span className="visually-hidden">Loading...</span>
+          </Spinner>
+        );
+      }
+    }
 
-  handleSubmit(event) {
-    alert("A name was submitted: " + this.state.value);
-    event.preventDefault();
+    if (typeof this.state.outp == "string") {
+      return this.state.outp;
+    }
   }
 
   render() {
@@ -96,6 +121,17 @@ class App extends React.Component {
             </Container>
           </Navbar>
         </div>
+        <Row>
+          <Col xs={5}>
+            <Alert className="mb-3 ms-3" variant="primary" xs={4}>
+              To Convert Your Text Into Model Readable Format Use This{" "}
+              <Alert.Link href="https://www.kaggle.com/code/praveen0123/notebook1f673e7715">
+                {" "}
+                Notebook
+              </Alert.Link>
+            </Alert>
+          </Col>
+        </Row>
 
         <Form>
           <Form.Group className="mb-3 ms-3">
@@ -121,6 +157,13 @@ class App extends React.Component {
             Predict
           </Button>
         </Form>
+        <Row>
+          <Col xs={5}>
+            <Alert className="mb-3 ms-3" variant="success" xs={4}>
+              {this.Loading()}
+            </Alert>
+          </Col>
+        </Row>
       </>
     );
   }
