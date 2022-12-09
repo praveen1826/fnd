@@ -72,11 +72,11 @@ class App extends React.Component {
     const outp1 = model.predict(a);
     outp1.print();
     console.log(outp1.dataSync()[0]);
-    if (outp1.dataSync()[0] > 0.5) {
-      this.setState({ outp: "News Is Fake" });
-    }
     if (outp1.dataSync()[0] < 0.5) {
-      this.setState({ outp: "News Is True" });
+      this.setState({ outp: "OutPut: News Is Fake" });
+    }
+    if (outp1.dataSync()[0] > 0.5) {
+      this.setState({ outp: "Output: News Is True" });
     }
   };
 
